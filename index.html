@@ -1,0 +1,2048 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taller de Analítica de Datos y Pronósticos Financieros</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --primary: #1e3a8a;
+        --primary-light: #3b82f6;
+        --secondary: #0ea5e9;
+        --accent: #f59e0b;
+        --success: #10b981;
+        --danger: #ef4444;
+        --dark: #0f172a;
+        --gray-900: #1e293b;
+        --gray-800: #334155;
+        --gray-700: #475569;
+        --gray-600: #64748b;
+        --gray-400: #94a3b8;
+        --gray-200: #e2e8f0;
+        --gray-100: #f1f5f9;
+        --gray-50: #f8fafc;
+        --white: #ffffff;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        --radius: 12px;
+        --radius-sm: 8px;
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        color: var(--gray-900);
+        line-height: 1.6;
+        min-height: 100vh;
+    }
+
+    /* HEADER */
+    header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        color: white;
+        padding: 3rem 2rem;
+        box-shadow: var(--shadow-lg);
+        position: relative;
+        overflow: hidden;
+    }
+
+    header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: 
+            radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(245,158,11,0.15) 0%, transparent 50%);
+        pointer-events: none;
+    }
+
+    .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    .badge {
+        display: inline-block;
+        background: rgba(255,255,255,0.2);
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    header h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.5px;
+    }
+
+    header .subtitle {
+        font-size: 1.15rem;
+        opacity: 0.95;
+        font-weight: 300;
+    }
+
+    .header-meta {
+        display: flex;
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .meta-icon {
+        width: 32px;
+        height: 32px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+
+    /* NAVIGATION */
+    nav {
+        background: white;
+        box-shadow: var(--shadow);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        border-bottom: 2px solid var(--gray-100);
+    }
+
+    .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        overflow-x: auto;
+        scrollbar-width: thin;
+    }
+
+    .nav-container::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .nav-container::-webkit-scrollbar-thumb {
+        background: var(--gray-400);
+        border-radius: 2px;
+    }
+
+    nav ul {
+        display: flex;
+        list-style: none;
+        gap: 0.5rem;
+        min-width: max-content;
+    }
+
+    nav a {
+        display: block;
+        padding: 1rem 1.25rem;
+        color: var(--gray-700);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+        border-bottom: 3px solid transparent;
+        transition: var(--transition);
+        white-space: nowrap;
+    }
+
+    nav a:hover {
+        color: var(--primary);
+        background: var(--gray-50);
+        border-bottom-color: var(--primary-light);
+    }
+
+    /* MAIN CONTENT */
+    main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+    }
+
+    section {
+        background: white;
+        border-radius: var(--radius);
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        border: 1px solid var(--gray-100);
+    }
+
+    section:hover {
+        box-shadow: var(--shadow-lg);
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid var(--gray-100);
+    }
+
+    .section-number {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        color: white;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.3rem;
+        box-shadow: var(--shadow);
+        flex-shrink: 0;
+    }
+
+    .section-title {
+        font-size: 1.75rem;
+        color: var(--gray-900);
+        font-weight: 700;
+        letter-spacing: -0.3px;
+    }
+
+    .section-subtitle {
+        color: var(--gray-600);
+        font-size: 0.95rem;
+        margin-top: 0.25rem;
+    }
+
+    h3 {
+        color: var(--primary);
+        font-size: 1.25rem;
+        margin: 2rem 0 1rem 0;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    h3::before {
+        content: '';
+        width: 4px;
+        height: 20px;
+        background: var(--accent);
+        border-radius: 2px;
+    }
+
+    p {
+        margin-bottom: 1rem;
+        color: var(--gray-800);
+        text-align: justify;
+    }
+
+    ul, ol {
+        margin: 1rem 0 1rem 1.5rem;
+        color: var(--gray-800);
+    }
+
+    li {
+        margin-bottom: 0.5rem;
+        padding-left: 0.5rem;
+    }
+
+    /* CARDS */
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin: 1.5rem 0;
+    }
+
+    .card {
+        background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius-sm);
+        padding: 1.5rem;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, var(--primary-light) 0%, var(--secondary) 100%);
+    }
+
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary-light);
+    }
+
+    .card-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        color: white;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .card h4 {
+        color: var(--gray-900);
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+    }
+
+    .card p {
+        color: var(--gray-700);
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    /* TABLES */
+    .table-wrapper {
+        overflow-x: auto;
+        margin: 1.5rem 0;
+        border-radius: var(--radius-sm);
+        box-shadow: var(--shadow-sm);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        font-size: 0.9rem;
+    }
+
+    thead {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        color: white;
+    }
+
+    th {
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+    }
+
+    td {
+        padding: 0.875rem 1rem;
+        border-bottom: 1px solid var(--gray-200);
+        color: var(--gray-800);
+    }
+
+    tbody tr {
+        transition: var(--transition);
+    }
+
+    tbody tr:hover {
+        background: var(--gray-50);
+    }
+
+    tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* CODE BLOCKS */
+    pre {
+        background: var(--gray-900);
+        color: #e2e8f0;
+        padding: 1.5rem;
+        border-radius: var(--radius-sm);
+        overflow-x: auto;
+        margin: 1rem 0;
+        font-family: 'Consolas', 'Monaco', monospace;
+        font-size: 0.85rem;
+        line-height: 1.6;
+        border-left: 4px solid var(--accent);
+    }
+
+    code {
+        font-family: 'Consolas', 'Monaco', monospace;
+        background: var(--gray-100);
+        padding: 0.15rem 0.4rem;
+        border-radius: 4px;
+        font-size: 0.85em;
+        color: var(--primary);
+    }
+
+    pre code {
+        background: transparent;
+        padding: 0;
+        color: inherit;
+    }
+
+    .keyword { color: #60a5fa; }
+    .string { color: #86efac; }
+    .comment { color: #94a3b8; font-style: italic; }
+    .function { color: #fbbf24; }
+    .number { color: #f472b6; }
+
+    /* ALERT BOXES */
+    .alert {
+        padding: 1.25rem 1.5rem;
+        border-radius: var(--radius-sm);
+        margin: 1.5rem 0;
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+        border-left: 4px solid;
+    }
+
+    .alert-icon {
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .alert-info {
+        background: #dbeafe;
+        border-color: var(--primary-light);
+        color: #1e40af;
+    }
+
+    .alert-warning {
+        background: #fef3c7;
+        border-color: var(--accent);
+        color: #92400e;
+    }
+
+    .alert-success {
+        background: #d1fae5;
+        border-color: var(--success);
+        color: #065f46;
+    }
+
+    .alert-danger {
+        background: #fee2e2;
+        border-color: var(--danger);
+        color: #991b1b;
+    }
+
+    .alert-content strong {
+        display: block;
+        margin-bottom: 0.25rem;
+        font-size: 1rem;
+    }
+
+    .alert-content p {
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    /* FORMULA BOX */
+    .formula {
+        background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+        border: 2px dashed var(--primary-light);
+        border-radius: var(--radius-sm);
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        text-align: center;
+        font-family: 'Consolas', monospace;
+        font-size: 1.1rem;
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    /* DELIVERABLE BOX */
+    .deliverable {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border-radius: var(--radius-sm);
+        padding: 1.25rem 1.5rem;
+        margin: 1.5rem 0;
+        border-left: 4px solid var(--accent);
+    }
+
+    .deliverable-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 700;
+        color: #78350f;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .deliverable ul {
+        margin: 0.5rem 0 0 1.5rem;
+        color: #78350f;
+    }
+
+    .deliverable li {
+        font-size: 0.9rem;
+    }
+
+    /* COMPARISON GRID */
+    .comparison {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin: 1.5rem 0;
+    }
+
+    .comparison-item {
+        background: white;
+        border: 2px solid var(--gray-200);
+        border-radius: var(--radius-sm);
+        padding: 1.5rem;
+        transition: var(--transition);
+    }
+
+    .comparison-item:hover {
+        border-color: var(--primary-light);
+        box-shadow: var(--shadow);
+    }
+
+    .comparison-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid var(--gray-100);
+    }
+
+    .comparison-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        color: white;
+        font-weight: 700;
+    }
+
+    .excel-icon {
+        background: linear-gradient(135deg, #107c41 0%, #21a366 100%);
+    }
+
+    .ai-icon {
+        background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+    }
+
+    .comparison-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--gray-900);
+    }
+
+    /* RUBRIC */
+    .rubric-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr 3fr;
+        gap: 1rem;
+        padding: 1rem;
+        border-bottom: 1px solid var(--gray-200);
+        align-items: start;
+    }
+
+    .rubric-row:last-child {
+        border-bottom: none;
+    }
+
+    .rubric-row.header {
+        background: var(--gray-50);
+        font-weight: 700;
+        color: var(--gray-900);
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+    }
+
+    .rubric-criterion {
+        font-weight: 600;
+        color: var(--gray-900);
+    }
+
+    .rubric-weight {
+        background: var(--primary);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        display: inline-block;
+    }
+
+    /* FOOTER */
+    footer {
+        background: var(--gray-900);
+        color: var(--gray-400);
+        padding: 3rem 2rem 2rem 2rem;
+        margin-top: 3rem;
+    }
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .footer-section h4 {
+        color: white;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+    }
+
+    .footer-section p, .footer-section li {
+        font-size: 0.9rem;
+        color: var(--gray-400);
+        margin-bottom: 0.5rem;
+    }
+
+    .footer-section ul {
+        list-style: none;
+        margin: 0;
+    }
+
+    .footer-bottom {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding-top: 2rem;
+        border-top: 1px solid var(--gray-800);
+        text-align: center;
+        font-size: 0.85rem;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+        header h1 {
+            font-size: 1.75rem;
+        }
+
+        .section-title {
+            font-size: 1.35rem;
+        }
+
+        section {
+            padding: 1.5rem;
+        }
+
+        main {
+            padding: 1.5rem 1rem;
+        }
+
+        .comparison {
+            grid-template-columns: 1fr;
+        }
+
+        .rubric-row {
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+
+        .header-meta {
+            gap: 1rem;
+        }
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    section {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    /* SCROLL INDICATOR */
+    .progress-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent) 0%, var(--primary-light) 100%);
+        z-index: 1000;
+        transition: width 0.1s;
+    }
+
+    /* BACK TO TOP */
+    .back-to-top {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.5rem;
+        box-shadow: var(--shadow-lg);
+        opacity: 0;
+        visibility: hidden;
+        transition: var(--transition);
+        z-index: 99;
+    }
+
+    .back-to-top.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .back-to-top:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-xl);
+    }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<header>
+    <div class="header-content">
+        <span class="badge">📊 Taller Académico Avanzado</span>
+        <h1>Analítica de Datos y Pronósticos Financieros</h1>
+        <p class="subtitle">Metodología Harvard Business Case · Comparativa Excel vs Inteligencia Artificial</p>
+        <div class="header-meta">
+            <div class="meta-item">
+                <div class="meta-icon">🎓</div>
+                <span>Nivel Universitario</span>
+            </div>
+            <div class="meta-item">
+                <div class="meta-icon">⏱️</div>
+                <span>12 Actividades Secuenciales</span>
+            </div>
+            <div class="meta-item">
+                <div class="meta-icon">📈</div>
+                <span>Horizonte: 6 Meses</span>
+            </div>
+            <div class="meta-item">
+                <div class="meta-icon">🔬</div>
+                <span>7+ Métodos de Pronóstico</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<nav>
+    <div class="nav-container">
+        <ul>
+            <li><a href="#contexto">📋 Contexto</a></li>
+            <li><a href="#objetivos">🎯 Objetivos</a></li>
+            <li><a href="#actividad-0">Caso Corporativo</a></li>
+            <li><a href="#actividad-1">Datos Aleatorios</a></li>
+            <li><a href="#actividad-2">Análisis EDA</a></li>
+            <li><a href="#actividad-3">Último Valor</a></li>
+            <li><a href="#actividad-4">Promedio Simple</a></li>
+            <li><a href="#actividad-5">Promedio Móvil</a></li>
+            <li><a href="#actividad-6">Suavización Simple</a></li>
+            <li><a href="#actividad-7">Holt</a></li>
+            <li><a href="#actividad-8">Regresión</a></li>
+            <li><a href="#actividad-9">ARIMA</a></li>
+            <li><a href="#actividad-10">Métricas Error</a></li>
+            <li><a href="#actividad-11">Excel vs IA</a></li>
+            <li><a href="#actividad-12">Recomendaciones</a></li>
+            <li><a href="#rubrica">📝 Rúbrica</a></li>
+            <li><a href="#guia">📘 Guía Paso a Paso</a></li>
+        </ul>
+    </div>
+</nav>
+
+<main>
+
+    <!-- CONTEXTO -->
+    <section id="contexto">
+        <div class="section-header">
+            <div class="section-number">C</div>
+            <div>
+                <h2 class="section-title">Contexto del Taller</h2>
+                <p class="section-subtitle">Marco conceptual y fundamentación metodológica</p>
+            </div>
+        </div>
+
+        <p>Este taller académico está diseñado bajo la metodología de <strong>Harvard Business Case Study</strong>, una de las estrategias pedagógicas más reconocidas a nivel mundial para la formación de tomadores de decisiones en contextos empresariales complejos. La estructura combina narrativa corporativa sólida, datos cuantificables y decisiones estratégicas fundamentadas en evidencia empírica.</p>
+
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon">🏢</div>
+                <h4>Caso Corporativo</h4>
+                <p>Empresa ficticia con historia sólida, problemática financiera específica y datos históricos de 24-36 meses.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">📊</div>
+                <h4>Análisis Cuantitativo</h4>
+                <p>Aplicación rigurosa de métodos estadísticos y de series temporales para pronósticos financieros.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🤖</div>
+                <h4>Comparativa Tecnológica</h4>
+                <p>Evaluación sistemática entre herramientas tradicionales (Excel) e inteligencia artificial.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🎯</div>
+                <h4>Toma de Decisiones</h4>
+                <p>Traducción de resultados técnicos en recomendaciones gerenciales accionables.</p>
+            </div>
+        </div>
+
+        <div class="alert alert-info">
+            <div class="alert-icon">💡</div>
+            <div class="alert-content">
+                <strong>Enfoque Pedagógico</strong>
+                <p>El taller sigue una progresión de dificultad creciente: desde métodos simples (último valor) hasta modelos avanzados (ARIMA), permitiendo a los estudiantes construir competencias de manera gradual y validada.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- OBJETIVOS -->
+    <section id="objetivos">
+        <div class="section-header">
+            <div class="section-number">T</div>
+            <div>
+                <h2 class="section-title">Objetivos Pedagógicos</h2>
+                <p class="section-subtitle">Competencias a desarrollar durante el taller</p>
+            </div>
+        </div>
+
+        <h3>Objetivo General</h3>
+        <p>Desarrollar competencias en pronósticos financieros mediante comparación sistemática entre herramientas tradicionales (Excel) e inteligencia artificial, identificando fortalezas, debilidades y complementariedades para la toma de decisiones estratégicas.</p>
+
+        <h3>Objetivos Específicos</h3>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon">🔧</div>
+                <h4>Competencia Técnica</h4>
+                <p>Dominar múltiples métodos de pronóstico de series temporales aplicados a variables financieras.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🔍</div>
+                <h4>Competencia Analítica</h4>
+                <p>Validar modelos mediante métricas de error estadístico (MAPE, MSE, MAD, ME).</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">💻</div>
+                <h4>Competencia Tecnológica</h4>
+                <p>Comparar efectividad entre Excel e IA identificando casos de uso óptimos.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">⚖️</div>
+                <h4>Competencia Crítica</h4>
+                <p>Argumentar selección de método óptimo con evidencia empírica sólida.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">📈</div>
+                <h4>Competencia Estratégica</h4>
+                <p>Traducir resultados técnicos en recomendaciones gerenciales accionables.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🤝</div>
+                <h4>Competencia Colaborativa</h4>
+                <p>Trabajar en equipos diferenciados con datos únicos que promuevan el debate.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ACTIVIDAD 0: CASO CORPORATIVO -->
+    <section id="actividad-0">
+        <div class="section-header">
+            <div class="section-number">0</div>
+            <div>
+                <h2 class="section-title">Contextualización del Caso Corporativo</h2>
+                <p class="section-subtitle">Introducción a la narrativa empresarial</p>
+            </div>
+        </div>
+
+        <h3>Narrativa Corporativa: Agroindustrias del Tolima S.A.S.</h3>
+        
+        <p><strong>Agroindustrias del Tolima S.A.S.</strong> es una empresa colombiana fundada en 2018, con sede principal en Ibagué y operaciones en los municipios del Espinal, Rovira y Cajamarca. Se dedica a la producción, procesamiento y comercialización de derivados agrícolas premium, específicamente harina de yuca, fécula de plátano y snacks deshidratados de frutas tropicales.</p>
+
+        <p>Con una plantilla de 85 empleados y una facturación anual cercana a los 4.800 millones de pesos, la empresa ha experimentado un crecimiento sostenido del 12% anual durante sus primeros cuatro años de operación. Sin embargo, en el último año ha enfrentado desafíos significativos relacionados con la <strong>gestión de inventarios</strong> y la <strong>planificación de la producción</strong>, derivadas de la alta estacionalidad de la demanda y la volatilidad de los precios de materias primas.</p>
+
+        <div class="alert alert-warning">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <strong>Problemática Financiera</strong>
+                <p>La empresa presenta excesos de inventario en meses de baja demanda (generando costos de almacenamiento del 8% sobre el valor del producto) y desabastecimientos en meses pico (con pérdida estimada de ventas del 15%). El consejo directivo requiere pronósticos confiables para los próximos 6 meses que permitan optimizar la planificación financiera y operativa.</p>
+            </div>
+        </div>
+
+        <h3>Variables Clave del Caso</h3>
+        <ul>
+            <li><strong>Ventas mensuales:</strong> Ingresos por ventas de productos terminados (miles de pesos).</li>
+            <li><strong>Costos de producción:</strong> Materias primas, mano de obra directa y costos indirectos.</li>
+            <li><strong>Gastos administrativos:</strong> Nómina administrativa, servicios públicos, arrendamientos.</li>
+            <li><strong>Inventario promedio:</strong> Valor monetario del inventario al cierre de cada mes.</li>
+            <li><strong>Número de clientes activos:</strong> Clientes que realizaron al menos una compra en el mes.</li>
+            <li><strong>Pedidos procesados:</strong> Cantidad total de órdenes atendidas en el período.</li>
+        </ul>
+
+        <div class="deliverable">
+            <div class="deliverable-title">📦 Entregable de la Actividad 0</div>
+            <ul>
+                <li>Lectura comprensiva del caso corporativo</li>
+                <li>Identificación de variables críticas</li>
+                <li>Formulación inicial de hipótesis sobre el comportamiento de la demanda</li>
+                <li>Definición del horizonte de pronóstico (6 meses)</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ACTIVIDAD 1: DATOS ALEATORIOS -->
+    <section id="actividad-1">
+        <div class="section-header">
+            <div class="section-number">1</div>
+            <div>
+                <h2 class="section-title">Generación de Datos Aleatorios Controlados</h2>
+                <p class="section-subtitle">Construcción de la base de datos del taller</p>
+            </div>
+        </div>
+
+        <p>Cada grupo de estudiantes trabajará con un conjunto de datos único, generado mediante parámetros específicos que garantizan la diferenciación entre equipos y promueven el análisis comparativo al finalizar el taller.</p>
+
+        <h3>Parámetros de Aleatoriedad por Grupo</h3>
+        
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Grupo</th>
+                        <th>Rango Ventas (miles)</th>
+                        <th>Tendencia</th>
+                        <th>Estacionalidad</th>
+                        <th>Ruido (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Grupo 1</strong></td>
+                        <td>50,000 - 150,000</td>
+                        <td>Creciente 5% mensual</td>
+                        <td>Alta (±20%)</td>
+                        <td>10-15%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Grupo 2</strong></td>
+                        <td>80,000 - 200,000</td>
+                        <td>Estable</td>
+                        <td>Media (±10%)</td>
+                        <td>15-20%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Grupo 3</strong></td>
+                        <td>30,000 - 100,000</td>
+                        <td>Decreciente 3% mensual</td>
+                        <td>Baja (±5%)</td>
+                        <td>20-25%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Grupo 4</strong></td>
+                        <td>100,000 - 300,000</td>
+                        <td>Creciente 8% mensual</td>
+                        <td>Alta (±25%)</td>
+                        <td>8-12%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Grupo 5</strong></td>
+                        <td>60,000 - 180,000</td>
+                        <td>Estacional pura</td>
+                        <td>Muy alta (±30%)</td>
+                        <td>12-18%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Instrucciones de Generación en Excel</h3>
+        <pre><code><span class="comment">// Fórmula base para generar datos con tendencia y estacionalidad</span>
+<span class="keyword">=</span>(<span class="function">BASE</span> * (<span class="number">1</span> + <span class="function">TENDENCIA</span>)^<span class="function">PERIODO</span>) 
+   * (<span class="number">1</span> + <span class="function">ESTACIONALIDAD</span>[<span class="function">MES</span>]) 
+   * (<span class="number">1</span> + <span class="function">ALEATORIO.NORMAL</span>(<span class="number">0</span>, <span class="function">RUIDO</span>))</code></pre>
+
+        <div class="alert alert-success">
+            <div class="alert-icon">✅</div>
+            <div class="alert-content">
+                <strong>Buenas Prácticas</strong>
+                <p>Documente todos los parámetros utilizados en una hoja separada. Verifique que los datos generados sean coherentes con la narrativa del caso (por ejemplo, ventas no pueden ser negativas).</p>
+            </div>
+        </div>
+
+        <div class="deliverable">
+            <div class="deliverable-title">📦 Entregable de la Actividad 1</div>
+            <ul>
+                <li>Tabla de datos históricos (24-36 meses) para las 6 variables</li>
+                <li>Documentación de parámetros utilizados por variable</li>
+                <li>Gráfico inicial de series temporales</li>
+                <li>Validación de coherencia con el caso corporativo</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ACTIVIDAD 2: ANÁLISIS EXPLORATORIO -->
+    <section id="actividad-2">
+        <div class="section-header">
+            <div class="section-number">2</div>
+            <div>
+                <h2 class="section-title">Análisis Exploratorio de Series Temporales</h2>
+                <p class="section-subtitle">Comprensión profunda del comportamiento de los datos</p>
+            </div>
+        </div>
+
+        <p>Antes de aplicar cualquier método de pronóstico, es fundamental realizar un análisis visual y estadístico exhaustivo de cada variable. Esta etapa permite identificar patrones subyacentes y seleccionar el método más apropiado.</p>
+
+        <h3>Componentes del Análisis</h3>
+
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon">📈</div>
+                <h4>Graficación</h4>
+                <p>Identificación visual de tendencia, estacionalidad, ciclicidad y componente irregular.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">📊</div>
+                <h4>Estadísticos Descriptivos</h4>
+                <p>Media, mediana, desviación estándar, coeficiente de variación, percentiles.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🔗</div>
+                <h4>Autocorrelación</h4>
+                <p>Análisis de correlación entre períodos consecutivos mediante ACF y PACF.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🧪</div>
+                <h4>Estacionariedad</h4>
+                <p>Prueba conceptual de Dickey-Fuller para determinar necesidad de diferenciación.</p>
+            </div>
+        </div>
+
+        <h3>Interpretación de Patrones</h3>
+        <ul>
+            <li><strong>Tendencia:</strong> Movimiento de largo plazo (creciente, decreciente o estable).</li>
+            <li><strong>Estacionalidad:</strong> Patrones repetitivos en períodos fijos (mensual, trimestral).</li>
+            <li><strong>Ciclicidad:</strong> Fluctuaciones no estacionales de largo plazo.</li>
+            <li><strong>Componente irregular:</strong> Variaciones aleatorias no sistemáticas (ruido).</li>
+        </ul>
+
+        <div class="deliverable">
+            <div class="deliverable-title">📦 Entregable de la Actividad 2</div>
+            <ul>
+                <li>Informe de análisis exploratorio (2-3 páginas)</li>
+                <li>Gráficos con interpretación detallada de cada variable</li>
+                <li>Tabla consolidada de estadísticos descriptivos</li>
+                <li>Conclusiones sobre comportamiento y selección preliminar de métodos</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ACTIVIDAD 3: ÚLTIMO VALOR -->
+    <section id="actividad-3">
+        <div class="section-header">
+            <div class="section-number">3</div>
+            <div>
+                <h2 class="section-title">Pronóstico con Método del Último Valor</h2>
+                <p class="section-subtitle">El método de pronóstico más simple</p>
+            </div>
+        </div>
+
+        <p>El método del último valor, también conocido como <em>naïve forecast</em>, utiliza el valor más recientemente observado como predicción para todos los períodos futuros. A pesar de su simplicidad, sirve como línea base fundamental para comparar métodos más sofisticados.</p>
+
+        <div class="formula">
+            F(t+1) = A(t)
+        </div>
+
+        <p>Donde <code>F(t+1)</code> es el pronóstico para el período siguiente y <code>A(t)</code> es el valor actual (último observado).</p>
+
+        <h3>Análisis Crítico Requerido</h3>
+        <ul>
+            <li>¿En qué situaciones este método es apropiado?</li>
+            <li>¿Cuáles son sus limitaciones principales?</li>
+            <li>¿Captura tendencia o estacionalidad?</li>
+            <li>¿Cuándo debería descartarse su uso?</li>
+        </ul>
+
+        <div class="deliverable">
+            <div class="deliverable-title">📦 Entregable de la Actividad 3</div>
+            <ul>
+                <li>Tabla de pronósticos para los 6 meses siguientes</li>
+                <li>Cálculo de errores históricos para validación</li>
+                <li>Gráfico comparativo (real vs pronóstico)</li>
+                <li>Análisis crítico del método (mínimo 1 párrafo)</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ACTIVIDAD 4: PROMEDIO SIMPLE -->
+    <section id="actividad-4">
+        <div class="section-header">
+            <div class="section-number">4</div>
+            <div>
+                <h2 class="section-title">Pronóstico con Promedio Simple</h2>
+                <p class="section-subtitle">Suavizamiento mediante media aritmética</p>
+            </div>
+        </div>
+
+        <p>El método de promedio simple calcula la media aritmética de todos los datos históricos y la utiliza como pronóstico constante para los períodos futuros. Este método es útil cuando la serie no presenta tendencia ni estacionalidad marcadas.</p>
+
+        <div class="formula">
+            F(t+1) = Σ A(t) / n
+        </div>
+
+        <p>Donde <code>n</code> es el número total de períodos históricos.</p>
+
+        <h3>Puntos de Reflexión</h3>
+        <ul>
+            <li>Comparar resultados con el método del último valor.</li>
+            <li>¿Cuándo es superior este método?</li>
+            <li>¿Cómo afecta la presencia de tendencia?</li>
+            <li>Sensibilidad a valores atípicos (outliers).</li>
+        </ul>
+
+        <div class="deliverable">
+            <div class="deliverable-title">📦 Entregable de la Actividad 4</div>
+            <ul>
+                <li>Tabla de pronósticos (6 meses)</li>
+                <li>Cálculo de errores históricos</li>
+                <li>Gráfico comparativo</li>
+                <li>Análisis crítico del método</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ACTIVIDAD 5: PROMEDIO MÓVIL -->
+    <section id="actividad-5">
+        <div class="section-header">
+            <div class="section-number">5</div>
+            <div>
+                <h2 class="section-title">Pronóstico con Promedio Móvil</h2>
+                <p class="section-subtitle">Suavizamiento con ventana deslizante</p>
+            </div>
+        </div>
+
+        <p>El método de promedio móvil utiliza los últimos <code>n</code> períodos para calcular el pronóstico, permitiendo mayor responsividad a cambios recientes mientras suaviza fluctuaciones aleatorias.</p>
+
+        <div class="formula">
+            F(t+1) = [A(t) + A(t-1) + ... + A(t-n+1)] / n
+        </div>
+
+        <h3>Valores de n a Probar</h3>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Valor de n</th>
+                        <th>Características</th>
+                        <th>Uso Recomendado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>n = 3</strong></td>
+                        <td>Alta responsividad, poco suavizamiento</td>
+                        <td>Series con cambios rápidos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>n = 6</strong></td>
+                        <td>Balance moderado</td>
+                        <td>Series semestrales</td>
+                    </tr>
+                    <tr>
+                        <td><strong>n = 12</strong></td>
+                        <td>Alto suavizamiento, baja responsividad</td>
+                        <td>Series con estacionalidad anual</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="alert alert-info">
+            <div class="alert-icon">💡</div>
+            <div class="alert-content">
+                <strong>Trade-off Fundamental</strong>
+                <p>Existe un balance crítico entre <em>responsividad</em> (capacidad de reaccionar a cambios) y <em>estabilidad</em> (capacidad de suavizar ruido). Un n pequeño es más responsivo pero más ruidoso; un n grande es más estable pero más lento para reaccionar.</p>
+            </div>
+        </div>
+
+        <div class="deliverable">
+            <div class="deliverable-title">📦 Entregable de la Actividad 5</div>
+            <ul>
+                <li>Tabla comparativa de pronósticos (n=3, 6, 12)</li>
+                <li>Gráficos superpuestos de los tres modelos</li>
+                <li>Justificación del n óptimo con evidencia</li>
+                <li>Pronósticos finales para 6 meses</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ACTIVIDAD 6: SUAVIZACIÓN EXPONENCIAL SIMPLE -->
+    <section id="actividad-6">
+        <div class="section-header">
+            <div class="section-number">6</div>
+            <div>
+                <h2 class="section-title">Suavización Exponencial Simple</h2>
+                <p class="section-subtitle">Ponderación decreciente de observaciones</p>
+            </div>
+        </div>
+
+        <p>La suavización exponencial simple asigna pesos decrecientes exponencialmente a las observaciones pasadas, dando mayor importancia a los datos más recientes. El parámetro <code>α</code> (alfa) controla la velocidad de decaimiento.</p>
+
+        <div class="formula">
+            F(t+1) = α · A(t) + (1 - α) · F(t)
+        </div>
+
+        <h3>Valores de α a Probar</h3>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Valor de α</th>
+                        <th>Comportamiento</th>
+                        <th>Aplicación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>α = 0.1</strong></td>
+                        <td>Suavizamiento alto, poca responsividad</td>
+                        <td>Series muy estables</td>
+                    </tr>
+                    <tr>
+                        <td><strong>α = 0.3</strong></td>
+                        <td>Balance moderado</td>
+                        <td>Series con cambios graduales</td>
+                    </tr>
+                    <tr>
+                        <td><strong>α = 0.5</strong></td>
+                        <td>Responsividad media</td>
+                        <td>Series moderadamente volátiles</td>
+                    </tr>
+                    <tr>
+                        <td><strong>α = 0.7</strong></td>
+                        <td>Alta responsividad</td>
+                        <td>Series con cambios frecuentes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>α = 0.9</strong></td>
+                        <td>Muy responsivo, poco suavizamiento</td>
+                        <td>Series altamente volátiles</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="deliverable">
+            <div class="deliverable-title">📦 Entregable de la Actividad 6</div>
+            <ul>
+                <li>Tabla de pronósticos para cada valor de α</li>
+                <li>Cálculo de errores por α</li>
+                <li>Gráficos comparativos</li>
+                <li>Selección y justificación de α óptimo</li>
+                <li>Pronósticos finales (6 meses)</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ACTIVIDAD 7: HOLT -->
+    <section id="actividad-7">
+        <div class="section-header">
+            <div class="section-number">7</div>
+            <div>
+                <h2 class="section-title">Suavización Exponencial Doble (Holt)</h2>
+                <p class="section-subtitle">Modelado de series con tendencia</p>
+            </div>
+        </div>
+
+        <p>El método de Holt extiende la suavización exponencial simple para capturar series con tendencia, utilizando dos ecuaciones de suavizamiento: una para el nivel y otra para la tendencia.</p>
+
+        <div class="formula">
+            Nivel: L(t) = α · A(t) + (1 - α) · [L(t-1) + T(t-1)]<br>
+            Tendencia: T(t) = β · [L(t) - L(t-1)] + (1 - β) · T(t-1)<br>
+            Pronóstico: F(t+m) = L(t) + m · T(t)
+        </div>
+
+        <h3>Combinaciones de Parámetros a Probar</h3>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>α (Nivel)</th>
+                        <th>β (Tendencia)</th>
+                        <th>Perfil</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>0.2</td><td>0.1</td><td>Conservador</td></tr>
+                    <tr><td>0.3</td><td>0.2</td><td>Moderado</td></tr>
+                    <tr><td>0.5</td><td>0.3</td><td>Balanceado</td></tr>
+                    <tr><td>0.7</td><td>0.5</td><td>Agresivo</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="deliverable">
+            <div class="deliverable-title">📦 Entregable de la Actividad 7</div>
+            <ul>
+                <li>Tabla de nivel, tendencia y pronósticos</li>
+                <li>Errores por combinación de parámetros</li>
+                <li>Gráficos con componentes desglosados</li>
+                <li>Pronósticos finales (6 meses)</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ACTIVIDAD 8: REGRESIÓN LINEAL -->
+    <section id="actividad-8">
+        <div class="section-header">
+            <div class="section-number">8</div>
+            <div>
+                <h2 class="section-title">Pronóstico con Regresión Lineal</h2>
+                <p class="section-subtitle">Modelado de tendencia mediante mínimos cuadrados</p>
+            </div>
+        </div>
+
+        <p>El método de regresión lineal ajusta una línea de tendencia a los datos históricos mediante el método de mínimos cuadrados ordinarios, permitiendo proyectar valores futuros basados en la tendencia identificada.</p>
+
+        <div class="formula">
+            Y(t) = β₀ + β₁ · t + ε
+        </div>
+
+        <h3>Fórmulas de Cálculo</h3>
+        <pre><code><span class="comment">// Cálculo de la pendiente (β₁)</span>
+β₁ = [n · Σ(t·Y) - Σt · ΣY] / [n · Σ(t²) - (Σt)²]
+
+<span class="comment">// Cálculo del intercepto (β₀)</span>
+β₀ = Ȳ - β₁ · t̄
+
+<span class="comment">// Coeficiente de determinación (R²)</span>
+R² = 1 - [Σ(Y - Ŷ)² / Σ(Y - Ȳ)²]</code></pre>
+
+        <h3>Interpretación de Resultados</h3>
+        <ul>
+            <li><strong>β₀ (Intercepto):</strong> Valor esperado cuando t=0.</li>
+            <li><strong>β₁ (Pendiente):</strong> Cambio promedio en Y por cada unidad de tiempo.</li>
+            <li><strong>R²:</strong> Proporción de la variabilidad explicada por el modelo (0 a 1).</li>
+        </ul>
+
+        <div class="alert alert-warning">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <strong>Limitaciones del Método</strong>
+                <p>La regresión lineal asume una tendencia lineal constante, lo cual puede no ser apropiado para series con cambios estructurales, estacionalidad fuerte o comportamiento no lineal.</p>
+            </div>
+        </div>
+
+        <div class="deliverable">
+            <div class="deliverable-title">📦 Entregable de la Actividad 8</div>
+            <ul>
+                <li>Ecuación de regresión estimada</li>
+                <li>Valor de R² y su interpretación</li>
+                <li>Tabla de pronósticos (6 meses)</li>
+                <li>Gráfico con línea de tendencia</li>
+                <li>Análisis de residuos</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ACTIVIDAD 9: ARIMA -->
+    <section id="actividad-9">
+        <div class="section-header">
+            <div class="section-number">9</div>
+            <div>
+                <h2 class="section-title">Pronóstico con Modelo ARIMA (1,1,1)</h2>
+                <p class="section-subtitle">Modelado avanzado de series temporales</p>
+            </div>
+        </div>
+
+        <p>El modelo ARIMA (AutoRegressive Integrated Moving Average) es uno de los métodos más sofisticados para pronóstico de series temporales, combinando componentes autorregresivos (AR), integración (I) y media móvil (MA).</p>
+
+        <h3>Componentes del Modelo ARIMA(p,d,q)</h3>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon">AR</div>
+                <h4>AutoRegresivo (p=1)</h4>
+                <p>Relación entre observación actual y rezagos de la serie.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">I</div>
+                <h4>Integrado (d=1)</h4>
+                <p>Número de diferenciaciones para lograr estacionariedad.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">MA</div>
+                <h4>Media Móvil (q=1)</h4>
+                <p>Relación entre observación actual y errores pasados.</p>
+            </div>
+        </div>
+
+        <div class="formula">
+            (1 - φ₁B)(1 - B)Y(t) = (1 + θ₁B)ε(t)
+        </div>
+
+        <h3>Procedimiento de Implementación</h3>
+        <ol>
+            <li><strong>Diferenciación:</strong> Calcular ΔY(t) = Y(t) - Y(t-1)</li>
+            <li><strong>Identificación:</strong> Usar ACF y PACF de serie diferenciada</li>
+            <li><strong>Estimación:</strong> Calcular parámetros φ₁ y θ₁</li>
+            <li><strong>Validación:</strong> Verificar que residuos sean white noise</li>
+            <li><strong>Pronóstico:</strong> Generar predicciones para 6 meses</li>
+        </ol>
+
+        <div class="alert alert-info">
+            <div class="alert-icon">💡</div>
+            <div class="alert-content">
+                <strong>Nota Pedagógica</strong>
+                <p>Dada la complejidad de ARIMA, los estudiantes pueden implementar este modelo utilizando herramientas de IA (Python con statsmodels, R con forecast) o complementos especializados de Excel. El objetivo es comprender la lógica del modelo más que su implementación manual.</p>
+            </div>
+        </div>
+
+        <div class="deliverable">
+            <div class="deliverable-title">📦 Entregable de la Actividad 9</div>
+            <ul>
+                <li>Parámetros estimados (φ₁, θ₁)</li>
+                <li>Pruebas de validación de residuos</li>
+                <li>Tabla de pronósticos (6 meses)</li>
+                <li>Análisis comparativo con métodos anteriores</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ACTIVIDAD 10: MÉTRICAS DE ERROR -->
+    <section id="actividad-10">
+        <div class="section-header">
+            <div class="section-number">10</div>
+            <div>
+                <h2 class="section-title">Validación mediante Métricas de Error</h2>
+                <p class="section-subtitle">Comparación cuantitativa de métodos</p>
+            </div>
+        </div>
+
+        <p>La validación de modelos de pronóstico requiere el uso de métricas de error estandarizadas que permitan comparar objetivamente el desempeño de diferentes métodos.</p>
+
+        <h3>Métricas Requeridas</h3>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Métrica</th>
+                        <th>Sigla</th>
+                        <th>Fórmula</th>
+                        <th>Interpretación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Porcentaje de Error Medio Absoluto</strong></td>
+                        <td>PEMA / MAPE</td>
+                        <td>(1/n) · Σ|[(A-F)/A]| · 100%</td>
+                        <td>Error porcentual promedio</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Error Medio Cuadrático</strong></td>
+                        <td>EMC / MSE</td>
+                        <td>(1/n) · Σ(A-F)²</td>
+                        <td>Penaliza errores grandes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Desviación Absoluta Media</strong></td>
+                        <td>DAM / MAD</td>
+                        <td>(1/n) · Σ|A-F|</td>
+                        <td>Error absoluto promedio</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Error Medio</strong></td>
+                        <td>PME / ME</td>
+                        <td>(1/n) · Σ(A-F)</td>
+                        <td>Sesgo del pronóstico</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Tabla de Comparación Requerida</h3>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Método</th>
+                        <th>MAPE (%)</th>
+                        <th>MSE</th>
+                        <th>MAD</th>
+                        <th>ME</th>
+                        <th>Ranking</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Último Valor</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                    <tr><td>Promedio Simple</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                    <tr><td>Promedio Móvil (n=?)</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                    <tr><td>Suavización Exp. (α=?)</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                    <tr><td>Holt (α=?, β=?)</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                    <tr><td>Regresión Lineal</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                    <tr><td>ARIMA(1,1,1)</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="deliverable">
+            <div class="deliverable-title">📦 Entregable de la Actividad 10</div>
+            <ul>
+                <li>Tabla completa de métricas de error</li>
+                <li>Ranking de métodos por métrica</li>
+                <li>Selección de método óptimo global</li>
+                <li>Justificación técnica y gerencial</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ACTIVIDAD 11: EXCEL VS IA -->
+    <section id="actividad-11">
+        <div class="section-header">
+            <div class="section-number">11</div>
+            <div>
+                <h2 class="section-title">Comparación Excel vs Inteligencia Artificial</h2>
+                <p class="section-subtitle">Análisis crítico de herramientas tecnológicas</p>
+            </div>
+        </div>
+
+        <p>Esta actividad constituye el corazón metodológico del taller: comparar sistemáticamente los resultados obtenidos en Excel con los obtenidos mediante herramientas de IA, identificando fortalezas, debilidades y oportunidades de integración.</p>
+
+        <div class="comparison">
+            <div class="comparison-item">
+                <div class="comparison-header">
+                    <div class="comparison-icon excel-icon">X</div>
+                    <div class="comparison-title">Microsoft Excel</div>
+                </div>
+                <p><strong>Ventajas:</strong></p>
+                <ul>
+                    <li>Interfaz visual intuitiva</li>
+                    <li>Amplia adopción empresarial</li>
+                    <li>Curva de aprendizaje baja</li>
+                    <li>Fácil compartibilidad</li>
+                    <li>Ideal para análisis exploratorio</li>
+                </ul>
+                <p style="margin-top: 1rem;"><strong>Limitaciones:</strong></p>
+                <ul>
+                    <li>Métodos avanzados limitados</li>
+                    <li>Lento para grandes volúmenes</li>
+                    <li>Propenso a errores manuales</li>
+                    <li>Difícil reproducibilidad</li>
+                </ul>
+            </div>
+            <div class="comparison-item">
+                <div class="comparison-header">
+                    <div class="comparison-icon ai-icon">AI</div>
+                    <div class="comparison-title">Inteligencia Artificial</div>
+                </div>
+                <p><strong>Ventajas:</strong></p>
+                <ul>
+                    <li>Métodos avanzados nativos</li>
+                    <li>Alta velocidad de cálculo</li>
+                    <li>Automatización completa</li>
+                    <li>Reproducibilidad garantizada</li>
+                    <li>Escalabilidad ilimitada</li>
+                </ul>
+                <p style="margin-top: 1rem;"><strong>Limitaciones:</strong></p>
+                <ul>
+                    <li>Requiere programación</li>
+                    <li>Curva de aprendizaje alta</li>
+                    <li>Menos intuitivo visualmente</li>
+                    <li>Requiere gestión de versiones</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Flujo de Trabajo Híbrido Recomendado</h3>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon">1️⃣</div>
+                <h4>Fase 1: Excel</h4>
+                <p>Análisis exploratorio, visualización inicial y comprensión de datos.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">2️⃣</div>
+                <h4>Fase 2: IA</h4>
+                <p>Modelado avanzado, optimización de parámetros y validación rigurosa.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">3️⃣</div>
+                <h4>Fase 3: Excel</h4>
+                <p>Comunicación de resultados a stakeholders no técnicos.</p>
+            </div>
+        </div>
+
+        <div class="deliverable">
+            <div class="deliverable-title">📦 Entregable de la Actividad 11</div>
+            <ul>
+                <li>Informe comparativo detallado (3-5 páginas)</li>
+                <li>Tabla de fortalezas/debilidades completa</li>
+                <li>Análisis de diferencias en resultados</li>
+                <li>Recomendación de flujo de trabajo híbrido</li>
+                <li>Reflexión sobre futuro de la analítica</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ACTIVIDAD 12: RECOMENDACIONES -->
+    <section id="actividad-12">
+        <div class="section-header">
+            <div class="section-number">12</div>
+            <div>
+                <h2 class="section-title">Recomendaciones Gerenciales y Plan de Acción</h2>
+                <p class="section-subtitle">Traducción de resultados técnicos en decisiones estratégicas</p>
+            </div>
+        </div>
+
+        <p>El valor real del análisis de datos se materializa cuando los hallazgos técnicos se traducen en recomendaciones accionables para la toma de decisiones empresariales. Esta actividad cierra el ciclo del caso Harvard.</p>
+
+        <h3>Estructura del Informe Ejecutivo</h3>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon">📄</div>
+                <h4>Resumen Ejecutivo</h4>
+                <p>Síntesis de 1 página con problemática, metodología, hallazgos y recomendación clave.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🔍</div>
+                <h4>Análisis de Situación</h4>
+                <p>Estado financiero actual, tendencias identificadas, riesgos y oportunidades.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">📊</div>
+                <h4>Pronósticos Detallados</h4>
+                <p>Proyecciones 6 meses con intervalos de confianza y escenarios.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">💰</div>
+                <h4>Impacto Financiero</h4>
+                <p>Proyección de ingresos, costos, utilidad y necesidades de financiamiento.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🎯</div>
+                <h4>Recomendaciones</h4>
+                <p>Acciones inmediatas, ajustes operativos, decisiones de inversión.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">📡</div>
+                <h4>Plan de Monitoreo</h4>
+                <p>KPIs, frecuencia de actualización, señales de alerta, protocolo de ajuste.</p>
+            </div>
+        </div>
+
+        <div class="alert alert-success">
+            <div class="alert-icon">✅</div>
+            <div class="alert-content">
+                <strong>Clave del Éxito</strong>
+                <p>El informe ejecutivo debe estar redactado en lenguaje no técnico, accesible para tomadores de decisiones sin formación estadística. Las visualizaciones deben ser claras y las conclusiones accionables.</p>
+            </div>
+        </div>
+
+        <div class="deliverable">
+            <div class="deliverable-title">📦 Entregable de la Actividad 12</div>
+            <ul>
+                <li>Informe ejecutivo completo (máximo 10 páginas)</li>
+                <li>Presentación de 10 diapositivas</li>
+                <li>Dashboard con pronósticos y KPIs</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- RÚBRICA -->
+    <section id="rubrica">
+        <div class="section-header">
+            <div class="section-number">📝</div>
+            <div>
+                <h2 class="section-title">Rúbrica de Evaluación</h2>
+                <p class="section-subtitle">Criterios y ponderaciones para la calificación</p>
+            </div>
+        </div>
+
+        <p>La evaluación se realiza mediante una rúbrica analítica con 9 criterios ponderados, cada uno con una escala de 1 a 5 puntos. La nota final se calcula como el promedio ponderado de las calificaciones obtenidas.</p>
+
+        <h3>Escala de Calificación</h3>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Puntaje</th>
+                        <th>Nivel</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>5</strong></td><td>Excelente</td><td>Supera las expectativas con evidencia sólida</td></tr>
+                    <tr><td><strong>4</strong></td><td>Bueno</td><td>Cumple completamente los requisitos</td></tr>
+                    <tr><td><strong>3</strong></td><td>Satisfactorio</td><td>Cumple los requisitos básicos</td></tr>
+                    <tr><td><strong>2</strong></td><td>Básico</td><td>Cumple parcialmente los requisitos</td></tr>
+                    <tr><td><strong>1</strong></td><td>Insuficiente</td><td>No cumple los requisitos mínimos</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Criterios de Evaluación</h3>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Criterio</th>
+                        <th>Peso</th>
+                        <th>Descripción del Nivel Excelente (5)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="rubric-criterion">Comprensión del Caso</td>
+                        <td><span class="rubric-weight">10%</span></td>
+                        <td>Análisis profundo con identificación de variables clave</td>
+                    </tr>
+                    <tr>
+                        <td class="rubric-criterion">Generación de Datos</td>
+                        <td><span class="rubric-weight">10%</span></td>
+                        <td>Datos coherentes, documentados y validados</td>
+                    </tr>
+                    <tr>
+                        <td class="rubric-criterion">Análisis Exploratorio</td>
+                        <td><span class="rubric-weight">10%</span></td>
+                        <td>Análisis profundo con insights accionables</td>
+                    </tr>
+                    <tr>
+                        <td class="rubric-criterion">Aplicación de Métodos</td>
+                        <td><span class="rubric-weight">20%</span></td>
+                        <td>Dominio completo de todos los métodos</td>
+                    </tr>
+                    <tr>
+                        <td class="rubric-criterion">Validación de Parámetros</td>
+                        <td><span class="rubric-weight">10%</span></td>
+                        <td>Justificación rigurosa con evidencia</td>
+                    </tr>
+                    <tr>
+                        <td class="rubric-criterion">Métricas de Error</td>
+                        <td><span class="rubric-weight">15%</span></td>
+                        <td>Análisis comparativo profundo y conclusiones sólidas</td>
+                    </tr>
+                    <tr>
+                        <td class="rubric-criterion">Comparación Excel vs IA</td>
+                        <td><span class="rubric-weight">10%</span></td>
+                        <td>Análisis crítico con recomendaciones de integración</td>
+                    </tr>
+                    <tr>
+                        <td class="rubric-criterion">Recomendaciones Gerenciales</td>
+                        <td><span class="rubric-weight">10%</span></td>
+                        <td>Recomendaciones estratégicas accionables y fundamentadas</td>
+                    </tr>
+                    <tr>
+                        <td class="rubric-criterion">Presentación y Comunicación</td>
+                        <td><span class="rubric-weight">5%</span></td>
+                        <td>Profesional, claro, sin errores, visualmente atractivo</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Escala de Notas Finales</h3>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rango</th>
+                        <th>Calificación</th>
+                        <th>Letra</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>4.5 - 5.0</td><td>Excelente</td><td>A</td></tr>
+                    <tr><td>3.8 - 4.4</td><td>Bueno</td><td>B</td></tr>
+                    <tr><td>3.0 - 3.7</td><td>Satisfactorio</td><td>C</td></tr>
+                    <tr><td>2.0 - 2.9</td><td>Básico</td><td>D</td></tr>
+                    <tr><td>1.0 - 1.9</td><td>Insuficiente</td><td>F</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- GUÍA PASO A PASO -->
+    <section id="guia">
+        <div class="section-header">
+            <div class="section-number">📘</div>
+            <div>
+                <h2 class="section-title">Guía Paso a Paso: Implementación Técnica</h2>
+                <p class="section-subtitle">Instrucciones detalladas para Excel e IA</p>
+            </div>
+        </div>
+
+        <p>Esta guía proporciona instrucciones específicas para implementar cada método tanto en Excel como en herramientas de IA, facilitando la comparación directa entre ambas plataformas.</p>
+
+        <h3>Fase 1: Preparación de Datos</h3>
+        <div class="comparison">
+            <div class="comparison-item">
+                <div class="comparison-header">
+                    <div class="comparison-icon excel-icon">X</div>
+                    <div class="comparison-title">En Excel</div>
+                </div>
+                <ol>
+                    <li>Abrir archivo con datos históricos</li>
+                    <li>Verificar formato de tabla</li>
+                    <li>Limpiar datos (eliminar atípicos)</li>
+                    <li>Guardar copia de seguridad</li>
+                </ol>
+            </div>
+            <div class="comparison-item">
+                <div class="comparison-header">
+                    <div class="comparison-icon ai-icon">AI</div>
+                    <div class="comparison-title">En Python</div>
+                </div>
+                <pre style="font-size: 0.8rem;"><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+df = pd.read_excel(<span class="string">'datos.xlsx'</span>)
+<span class="function">print</span>(df.describe())
+<span class="function">print</span>(df.info())</code></pre>
+            </div>
+        </div>
+
+        <h3>Fase 2: Análisis Exploratorio</h3>
+        <div class="comparison">
+            <div class="comparison-item">
+                <div class="comparison-header">
+                    <div class="comparison-icon excel-icon">X</div>
+                    <div class="comparison-title">En Excel</div>
+                </div>
+                <pre style="font-size: 0.8rem;"><code><span class="comment">// Estadísticos</span>
+=PROMEDIO(B2:B25)
+=DESVEST(B2:B25)
+=MIN(B2:B25)
+=MAX(B2:B25)
+
+<span class="comment">// Gráfico: Insertar > Líneas</span></code></pre>
+            </div>
+            <div class="comparison-item">
+                <div class="comparison-header">
+                    <div class="comparison-icon ai-icon">AI</div>
+                    <div class="comparison-title">En Python</div>
+                </div>
+                <pre style="font-size: 0.8rem;"><code><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt
+
+plt.figure(figsize=(<span class="number">12</span>, <span class="number">6</span>))
+plt.plot(df[<span class="string">'fecha'</span>], df[<span class="string">'ventas'</span>])
+plt.title(<span class="string">'Serie Temporal'</span>)
+plt.show()
+
+<span class="comment"># ACF y PACF</span>
+<span class="keyword">from</span> statsmodels.graphics.tsaplots <span class="keyword">import</span> plot_acf
+plot_acf(df[<span class="string">'ventas'</span>])</code></pre>
+            </div>
+        </div>
+
+        <h3>Fase 3: Suavización Exponencial</h3>
+        <div class="comparison">
+            <div class="comparison-item">
+                <div class="comparison-header">
+                    <div class="comparison-icon excel-icon">X</div>
+                    <div class="comparison-title">En Excel</div>
+                </div>
+                <pre style="font-size: 0.8rem;"><code><span class="comment">// Fórmula recursiva</span>
+=<span class="number">0.3</span>*B5 + <span class="number">0.7</span>*C5
+
+<span class="comment">// Datos > Análisis de datos</span>
+<span class="comment">// > Suavización exponencial</span></code></pre>
+            </div>
+            <div class="comparison-item">
+                <div class="comparison-header">
+                    <div class="comparison-icon ai-icon">AI</div>
+                    <div class="comparison-title">En Python</div>
+                </div>
+                <pre style="font-size: 0.8rem;"><code><span class="keyword">from</span> statsmodels.tsa.holtwinters <span class="keyword">import</span> ExponentialSmoothing
+
+model = ExponentialSmoothing(
+    df[<span class="string">'ventas'</span>], 
+    trend=<span class="keyword">None</span>, 
+    seasonal=<span class="keyword">None</span>
+)
+fit = model.fit(smoothing_level=<span class="number">0.3</span>)
+forecast = fit.forecast(<span class="number">6</span>)</code></pre>
+            </div>
+        </div>
+
+        <h3>Fase 4: Modelo ARIMA</h3>
+        <div class="comparison">
+            <div class="comparison-item">
+                <div class="comparison-header">
+                    <div class="comparison-icon excel-icon">X</div>
+                    <div class="comparison-title">En Excel</div>
+                </div>
+                <p style="color: var(--danger);"><strong>Limitación:</strong> Excel no tiene ARIMA nativo. Se requiere complemento especializado o implementación manual compleja.</p>
+                <p><strong>Alternativa:</strong> Usar herramienta de IA para este método.</p>
+            </div>
+            <div class="comparison-item">
+                <div class="comparison-header">
+                    <div class="comparison-icon ai-icon">AI</div>
+                    <div class="comparison-title">En Python</div>
+                </div>
+                <pre style="font-size: 0.8rem;"><code><span class="keyword">from</span> statsmodels.tsa.arima.model <span class="keyword">import</span> ARIMA
+
+model = ARIMA(df[<span class="string">'ventas'</span>], order=(<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>))
+fit = model.fit()
+
+<span class="function">print</span>(fit.summary())
+forecast = fit.forecast(steps=<span class="number">6</span>)
+fit.plot_diagnostics()
+plt.show()</code></pre>
+            </div>
+        </div>
+
+        <h3>Fase 5: Cálculo de Métricas de Error</h3>
+        <div class="comparison">
+            <div class="comparison-item">
+                <div class="comparison-header">
+                    <div class="comparison-icon excel-icon">X</div>
+                    <div class="comparison-title">En Excel</div>
+                </div>
+                <pre style="font-size: 0.8rem;"><code><span class="comment">// MAPE</span>
+=PROMEDIO(ABS((B5-C5)/B5))*<span class="number">100</span>
+
+<span class="comment">// MSE</span>
+=PROMEDIO((B5-C5)^<span class="number">2</span>)
+
+<span class="comment">// MAD</span>
+=PROMEDIO(ABS(B5-C5))
+
+<span class="comment">// ME</span>
+=PROMEDIO(B5-C5)</code></pre>
+            </div>
+            <div class="comparison-item">
+                <div class="comparison-header">
+                    <div class="comparison-icon ai-icon">AI</div>
+                    <div class="comparison-title">En Python</div>
+                </div>
+                <pre style="font-size: 0.8rem;"><code><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> (
+    mean_squared_error, 
+    mean_absolute_error
+)
+
+mae = mean_absolute_error(y_true, y_pred)
+mse = mean_squared_error(y_true, y_pred)
+rmse = np.sqrt(mse)
+mape = np.mean(np.abs(
+    (y_true - y_pred) / y_true
+)) * <span class="number">100</span></code></pre>
+            </div>
+        </div>
+
+        <div class="alert alert-success">
+            <div class="alert-icon">🎯</div>
+            <div class="alert-content">
+                <strong>Conclusión de la Guía</strong>
+                <p><strong>Excel</strong> es ideal para análisis exploratorio, visualización rápida y comunicación con stakeholders no técnicos. <strong>IA</strong> es superior para modelado avanzado, automatización, grandes volúmenes de datos y reproducibilidad. El <strong>enfoque híbrido</strong> aprovecha lo mejor de ambas herramientas.</p>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-section">
+            <h4>📚 Sobre el Taller</h4>
+            <p>Taller académico avanzado de analítica de datos y pronósticos financieros basado en metodología Harvard Business Case.</p>
+        </div>
+        <div class="footer-section">
+            <h4>🎯 Objetivos</h4>
+            <ul>
+                <li>Desarrollar competencias técnicas</li>
+                <li>Comparar Excel vs IA</li>
+                <li>Validar con métricas de error</li>
+                <li>Traducir a decisiones gerenciales</li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h4>🛠️ Herramientas</h4>
+            <ul>
+                <li>Microsoft Excel</li>
+                <li>Python (pandas, statsmodels)</li>
+                <li>R (forecast, tseries)</li>
+                <li>Herramientas de IA</li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h4>📞 Contacto</h4>
+            <p>Para consultas sobre el taller, contacte al docente responsable del curso.</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Taller de Analítica de Datos y Pronósticos Financieros · Metodología Harvard Business Case · Diseñado para formación universitaria de excelencia</p>
+    </div>
+</footer>
+
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</button>
+
+<script>
+    // Progress bar
+    window.addEventListener('scroll', () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        document.getElementById('progressBar').style.width = scrolled + '%';
+        
+        // Back to top button
+        const backToTop = document.getElementById('backToTop');
+        if (winScroll > 500) {
+            backToTop.classList.add('visible');
+        } else {
+            backToTop.classList.remove('visible');
+        }
+    });
+
+    // Smooth scroll for navigation
+    document.querySelectorAll('nav a').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                const offset = 80;
+                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
